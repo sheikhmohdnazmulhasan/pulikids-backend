@@ -1,7 +1,7 @@
 import express, { Application, Request, Response } from "express";
 import cors from 'cors';
 import { StatusCodes } from 'http-status-codes';
-import { globalErrorHandler } from "./app/middlewares/globalErrorHandler";
+import { globalErrorHandler } from "./app/middlewares/global_error_handler";
 
 // initialize express
 const app: Application = express()
