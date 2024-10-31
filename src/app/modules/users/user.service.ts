@@ -6,16 +6,7 @@ import jwt from 'jsonwebtoken';
 import config from "../../config";
 import handleClerkError from "../../errors/handleClerkError";
 import crypto from "crypto";
-import nodemailer from "nodemailer";
-
-// Setup Nodemailer transporter
-const transporter = nodemailer.createTransport({
-    service: 'Gmail', // Or use a different service like SendGrid or Mailgun
-    auth: {
-        user: config.email_user, // Email service account
-        pass: config.email_pass // Email service password
-    }
-});
+import transporter from "../../../utils/nodemailer_transporter";
 
 // Define the parameter type for the createUser method from Clerk's client.
 // This ensures `createUserParams` has the exact structure Clerk expects.
@@ -198,12 +189,12 @@ export async function requestPasswordResetService(email: string) {
         await user.save();
 
         // Send an email with the reset link
-        // await transporter.sendMail({
-        //     to: user.email,
-        //     subject: "Password Reset Request",
-        //     html: `<p>You requested a password reset.</p>
-        //            <p>Click this <a href="${resetUrl}">link</a> to reset your password.</p>`
-        // });
+        await transporter.sendMail({
+            to: String(user.email),
+            subject: "Password Reset Request - Pulikids",
+            html: `<h3>You requested a password reset.</h3>
+                   <p>Rest token: ${resetToken}</p>`
+        });
 
         return {
             statusCode: StatusCodes.OK,
