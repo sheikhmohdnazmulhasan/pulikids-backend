@@ -1,4 +1,4 @@
-import { clerkClient } from "@clerk/express";
+import { authenticateRequest, clerkClient } from "@clerk/express";
 import type { IUser } from "./user.interface";
 import User from "./user.model";
 import { StatusCodes } from "http-status-codes";
@@ -84,7 +84,37 @@ async function createUserIntoDb({ email, password, firstName, lastName }: IUser)
     }
 };
 
+async function loginUserFromClerk(payload: { email: string; password: string }) {
+    try {
+        // Clerk's session-based login
+        const userSession = await clerkClient.users.verifyPassword({
+            userId: '32323',
+            password: 'eeewe'
+        })
+
+        clerkClient.
+
+        // if (!userSession) {
+        //     return res.status(401).json({ message: 'Invalid credentials' });
+        // }
+
+        // res.status(200).json({
+        //     message: 'Login successful',
+        //     sessionToken: userSession.session.token, // Clerk session token
+        //     user: userSession.user, // Clerk user data
+        // });
+
+        return userSession;
+
+    } catch (error) {
+        console.error("Login error:", error);
+        // res.status(400).json({ message: 'Login failed', error: error.message });
+    }
+
+}
+
 
 export const UserService = {
     createUserIntoDb,
+    loginUserFromClerk
 };
