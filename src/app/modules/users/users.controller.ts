@@ -13,17 +13,21 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
         success: result.success,
         message: result.message,
         data: result.data,
-    })
+    });
 
 });
-
 
 
 const loginUser = catchAsync(async (req: Request, res: Response) => {
 
     const result = await UserService.loginUserFromClerk(req.body);
 
-    console.log(result);
+    sendResponse(res, {
+        statusCode: result.statusCode,
+        success: result.success,
+        message: result.message,
+        data: result.data,
+    });
 
 });
 

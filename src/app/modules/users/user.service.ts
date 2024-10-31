@@ -34,7 +34,7 @@ async function createUserIntoDb({ email, password, firstName, lastName }: IUser)
                 return {
                     statusCode: StatusCodes.OK,
                     success: true,
-                    message: 'User created in database. Please log in.',
+                    message: 'User registered successfully. Please log in.',
                     data: saveUserToDb
                 };
 
@@ -87,30 +87,64 @@ async function createUserIntoDb({ email, password, firstName, lastName }: IUser)
 async function loginUserFromClerk(payload: { email: string; password: string }) {
     try {
         // Clerk's session-based login
-        const userSession = await clerkClient.users.verifyPassword({
-            userId: '32323',
-            password: 'eeewe'
-        })
 
-        clerkClient.
+        const user = await User.findOne({ email: payload.email });
 
-        // if (!userSession) {
-        //     return res.status(401).json({ message: 'Invalid credentials' });
-        // }
+        if (!user) {
+            return {
+                statusCode: StatusCodes.NOT_FOUND,
+                success: false,
+                message: "User Not Found",
+                data: null,
+            };
+        };
 
-        // res.status(200).json({
-        //     message: 'Login successful',
-        //     sessionToken: userSession.session.token, // Clerk session token
-        //     user: userSession.user, // Clerk user data
-        // });
+        await clerkClient.users.verifyPassword({
+            userId: String(user.clerkId),
+            password: payload.password
+        });
 
-        return userSession;
+        return {
+            statusCode: StatusCodes.OK,
+            success: true,
+            message: "User logged in successfully",
+            data: {
+                user: {
+                    name: `${user.firstName} ${user.lastName}`,
+                    email: user.email,
+                    role: user.role
+                },
+                token: {
+                    accessToken: '',
+                    refreshToken: ''
+                }
+            },
+        };
 
-    } catch (error) {
-        console.error("Login error:", error);
-        // res.status(400).json({ message: 'Login failed', error: error.message });
+    } catch (error: any) {
+        if (error.clerkError) {
+            // Format Clerk-specific errors to match TResponse structure.
+            const formattedError = {
+                statusCode: error.status || 422,
+                success: false,
+                message: error.errors?.[0]?.message || "An error occurred with Clerk.",
+                data: {
+                    clerkTraceId: error.clerkTraceId,
+                    errors: error.errors,
+                },
+            };
+
+            return formattedError;
+        } else {
+            // Handle general errors.
+            return {
+                statusCode: 500,
+                success: false,
+                message: "Internal Server Error",
+                data: null,
+            };
+        }
     }
-
 }
 
 
