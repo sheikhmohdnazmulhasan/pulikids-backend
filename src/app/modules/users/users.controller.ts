@@ -17,7 +17,6 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
 
 });
 
-
 const loginUser = catchAsync(async (req: Request, res: Response) => {
 
     const result = await UserService.loginUserFromClerk(req.body);
@@ -30,6 +29,7 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
     });
 
 });
+
 
 export const UserController = {
     createUser,
