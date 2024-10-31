@@ -4,4 +4,4 @@ const router = Router();
 
 router.post('/register',)
 
-export const UserRoute = router;
+export const UserRoutes = router;
