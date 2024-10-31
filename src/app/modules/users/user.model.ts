@@ -18,6 +18,14 @@ const userModel = new Schema<IUser>({
         type: String,
         required: true
     },
+    resetToken: {
+        type: String,
+        required: false
+    },
+    resetTokenExpiry: {
+        type: Date,
+        required: false
+    },
     role: {
         type: String,
         enum: ['admin', 'user'],

@@ -30,12 +30,20 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
 
 });
 
-const resetPassword = catchAsync(async (req: Request, res: Response) => {
-    console.log(req.body);
+const requestPasswordReset = catchAsync(async (req: Request, res: Response) => {
+
+    const result = await UserService.requestPasswordResetService(req.body.email);
+
+    sendResponse(res, {
+        statusCode: result.statusCode,
+        success: result.success,
+        message: result.message,
+        data: result.data,
+    });
 });
 
 export const UserController = {
     createUser,
     loginUser,
-    resetPassword
+    requestPasswordReset
 };

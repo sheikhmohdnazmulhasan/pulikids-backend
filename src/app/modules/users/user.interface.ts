@@ -4,5 +4,7 @@ export interface IUser {
     email: String;
     password?: String;
     clerkId?: String;
+    resetToken?: String;
+    resetTokenExpiry?: Date;
     role: 'user' | 'admin';
 }

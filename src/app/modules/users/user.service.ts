@@ -5,6 +5,17 @@ import { StatusCodes } from "http-status-codes";
 import jwt from 'jsonwebtoken';
 import config from "../../config";
 import handleClerkError from "../../errors/handleClerkError";
+import crypto from "crypto";
+import nodemailer from "nodemailer";
+
+// Setup Nodemailer transporter
+const transporter = nodemailer.createTransport({
+    service: 'Gmail', // Or use a different service like SendGrid or Mailgun
+    auth: {
+        user: config.email_user, // Email service account
+        pass: config.email_pass // Email service password
+    }
+});
 
 // Define the parameter type for the createUser method from Clerk's client.
 // This ensures `createUserParams` has the exact structure Clerk expects.
@@ -162,14 +173,102 @@ async function loginUserFromClerk(payload: { email: string; password: string; })
     }
 };
 
-async function resetPasswordWithClerk(payload: { email: string; }) {
 
-    console.log(payload);
+// Function to request a password reset
+export async function requestPasswordResetService(email: string) {
+    try {
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return {
+                statusCode: StatusCodes.NOT_FOUND,
+                success: false,
+                message: "User not found",
+                data: null
+            };
+        }
+
+        // Generate a secure token for the password reset link
+        const resetToken = crypto.randomBytes(32).toString("hex");
+        const resetTokenExpiry = Date.now() + 3600000; // 1 hour
+
+        // Store the token and expiry in the user's record
+        user.resetToken = resetToken;
+        user.resetTokenExpiry = new Date(resetTokenExpiry);
+        await user.save();
+
+        // Send an email with the reset link
+        // await transporter.sendMail({
+        //     to: user.email,
+        //     subject: "Password Reset Request",
+        //     html: `<p>You requested a password reset.</p>
+        //            <p>Click this <a href="${resetUrl}">link</a> to reset your password.</p>`
+        // });
+
+        console.log('reset token', resetToken);
+
+        return {
+            statusCode: StatusCodes.OK,
+            success: true,
+            message: "Password reset email sent. Please check your inbox.",
+            data: null
+        };
+
+    } catch (error) {
+        return {
+            statusCode: 500,
+            success: false,
+            message: "Internal Server Error",
+            data: null
+        };
+    }
 }
+
+// Function to reset the password
+export async function resetPassword(token: string, newPassword: string) {
+    try {
+        // Find the user with the matching reset token and valid expiry
+        const user = await User.findOne({
+            resetToken: token,
+            resetTokenExpiry: { $gt: Date.now() } // Check that the token hasn't expired
+        });
+
+        if (!user) {
+            return {
+                statusCode: StatusCodes.BAD_REQUEST,
+                success: false,
+                message: "Invalid or expired token",
+                data: null
+            };
+        }
+
+        // Update the password in Clerk and clear the reset token fields
+        await clerkClient.users.updateUser(user.clerkId, { password: newPassword });
+        user.resetToken = undefined;
+        user.resetTokenExpiry = undefined;
+        await user.save();
+
+        return {
+            statusCode: StatusCodes.OK,
+            success: true,
+            message: "Password reset successful",
+            data: null
+        };
+
+    } catch (error) {
+        return {
+            statusCode: 500,
+            success: false,
+            message: "Internal Server Error",
+            data: null
+        };
+    }
+}
+
 
 // Export UserService object with various methods
 export const UserService = {
     createUserIntoDb,
     loginUserFromClerk,
-    resetPasswordWithClerk
+    requestPasswordResetService
 };

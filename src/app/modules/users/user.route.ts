@@ -6,7 +6,7 @@ import { UserValidation } from "./user.validation";
 const router = Router();
 
 router.post('/register', ValidationRequest(UserValidation.createUserValidation), UserController.createUser);
-router.post('/login', UserController.loginUser);
-router.post('/recovery', UserController.resetPassword);
+router.post('/login', ValidationRequest(UserValidation.loginUserValidation), UserController.loginUser);
+router.patch('/password-reset-request', UserController.requestPasswordReset);
 
 export const UserRoutes = router;

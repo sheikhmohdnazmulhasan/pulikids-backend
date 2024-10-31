@@ -9,7 +9,15 @@ const createUserValidation = z.object({
     })
 });
 
+const loginUserValidation = z.object({
+    body: z.object({
+        email: z.string().email({ message: "Invalid email address" }),
+        password: z.string().nonempty({ message: "password is required" }),
+    })
+})
+
 export const UserValidation = {
-    createUserValidation
+    createUserValidation,
+    loginUserValidation
 };
 
