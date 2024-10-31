@@ -85,9 +85,8 @@ async function createUserIntoDb({ email, password, firstName, lastName }: IUser)
 };
 
 async function loginUserFromClerk(payload: { email: string; password: string }) {
-    try {
-        // Clerk's session-based login
 
+    try {
         const user = await User.findOne({ email: payload.email });
 
         if (!user) {
@@ -103,6 +102,8 @@ async function loginUserFromClerk(payload: { email: string; password: string }) 
             userId: String(user.clerkId),
             password: payload.password
         });
+
+        // token logic
 
         return {
             statusCode: StatusCodes.OK,
