@@ -7,7 +7,7 @@ let server: Server;
 
 (
     async function () {
-
+        console.log('Connecting to database...');
         try {
             await mongoose.connect(config.mongodb_uri as string);
             console.log("Pinged your deployment. You successfully connected to MongoDB!")

@@ -8,12 +8,14 @@ type TResponse<T> = {
 };
 
 const sendResponse = <T>(res: Response, data: TResponse<T>) => {
-    res.status(data.statusCode).json({
-        statusCode: data.statusCode,
-        success: data?.success,
-        message: data?.message,
-        data: data?.data,
-    });
+    if (!res.headersSent) {
+        res.status(data.statusCode).json({
+            statusCode: data.statusCode,
+            success: data.success,
+            message: data.message,
+            data: data.data,
+        });
+    }
 };
 
 export default sendResponse;
