@@ -211,7 +211,13 @@ export async function requestPasswordResetService(email: string) {
             statusCode: StatusCodes.OK,
             success: true,
             message: "Password reset email sent. Please check your inbox.",
-            data: null
+            data: {
+                user: {
+                    name: `${user.firstName} ${user.lastName}`,
+                    email: user.email,
+                    role: user.role
+                }
+            }
         };
 
     } catch (error) {
@@ -225,11 +231,11 @@ export async function requestPasswordResetService(email: string) {
 }
 
 // Function to reset the password
-export async function resetPassword(token: string, newPassword: string) {
+export async function resetPasswordService(payload: { token: string; newPassword: string; }) {
     try {
         // Find the user with the matching reset token and valid expiry
         const user = await User.findOne({
-            resetToken: token,
+            resetToken: payload.token,
             resetTokenExpiry: { $gt: Date.now() } // Check that the token hasn't expired
         });
 
@@ -243,7 +249,7 @@ export async function resetPassword(token: string, newPassword: string) {
         }
 
         // Update the password in Clerk and clear the reset token fields
-        await clerkClient.users.updateUser(user.clerkId, { password: newPassword });
+        await clerkClient.users.updateUser(String(user.clerkId), { password: payload.newPassword });
         user.resetToken = undefined;
         user.resetTokenExpiry = undefined;
         await user.save();
@@ -252,16 +258,30 @@ export async function resetPassword(token: string, newPassword: string) {
             statusCode: StatusCodes.OK,
             success: true,
             message: "Password reset successful",
-            data: null
+            data: {
+                user: {
+                    name: `${user.firstName} ${user.lastName}`,
+                    email: user.email,
+                    role: user.role
+                }
+            }
         };
 
-    } catch (error) {
-        return {
-            statusCode: 500,
-            success: false,
-            message: "Internal Server Error",
-            data: null
-        };
+    } catch (error: any) {
+        // Check if the error is specific to Clerk
+        if (error.clerkError) {
+            // Format Clerk-specific error to match TResponse structure
+
+            return handleClerkError(error);
+        } else {
+            // Handle general errors
+            return {
+                statusCode: 500,
+                success: false,
+                message: "Internal Server Error",
+                data: null,
+            };
+        }
     }
 }
 
@@ -270,5 +290,6 @@ export async function resetPassword(token: string, newPassword: string) {
 export const UserService = {
     createUserIntoDb,
     loginUserFromClerk,
-    requestPasswordResetService
+    requestPasswordResetService,
+    resetPasswordService
 };
