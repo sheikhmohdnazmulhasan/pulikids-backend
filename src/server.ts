@@ -24,7 +24,7 @@ let server: Server;
 
 // async error handle
 process.on('unhandledRejection', () => {
-    console.log('🥱 unhandledRejection is detected! shutting down the server...');
+    console.log('UnhandledRejection is detected! shutting down the server...');
 
     if (server) {
         server.close(() => {
@@ -38,6 +38,6 @@ process.on('unhandledRejection', () => {
 
 // synchronies error handle
 process.on('uncaughtException', () => {
-    console.log('🥱 uncaughtException is detected! shutting down the server...');
+    console.log('UncaughtException is detected! shutting down the server...');
     process.exit();
 });

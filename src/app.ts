@@ -2,9 +2,10 @@ import express, { Application, Request, Response } from "express";
 import cors from 'cors';
 import { StatusCodes } from 'http-status-codes';
 import { globalErrorHandler } from "./app/middlewares/global_error_handler";
+import router from "./app/router";
 
 // initialize express
-const app: Application = express()
+const app: Application = express();
 
 // parser
 app.use(express.json());
@@ -14,6 +15,9 @@ app.use(cors());
 app.get('/', (req: Request, res: Response) => {
     res.send('Hello World')
 });
+
+// application route
+app.use('/api/v1', router);
 
 // global error handler
 app.use(globalErrorHandler);
