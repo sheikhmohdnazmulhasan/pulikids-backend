@@ -1,0 +1,444 @@
+openapi: 3.0.0
+info:
+  title: Activity Tracking and Booking API
+  version: 1.0.0
+  description: API for managing activities, attendance, bookings, and payments
+
+servers:
+  - url: https://api.example.com/v1
+
+paths:
+  /activities:
+    post:
+      summary: Create a new activity
+      tags:
+        - Activities
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActivityInput'
+      responses:
+        '201':
+          description: Activity created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Activity'
+        '400':
+          description: Invalid input
+        '401':
+          description: Unauthorized
+    get:
+      summary: Get all activities
+      tags:
+        - Activities
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Activity'
+
+  /activities/{activityId}:
+    get:
+      summary: Retrieve details of a specific activity
+      tags:
+        - Activities
+      parameters:
+        - name: activityId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Activity'
+        '404':
+          description: Activity not found
+    put:
+      summary: Update an existing activity
+      tags:
+        - Activities
+      parameters:
+        - name: activityId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActivityInput'
+      responses:
+        '200':
+          description: Activity updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Activity'
+        '400':
+          description: Invalid input
+        '401':
+          description: Unauthorized
+        '404':
+          description: Activity not found
+    delete:
+      summary: Delete an activity
+      tags:
+        - Activities
+      parameters:
+        - name: activityId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Activity deleted successfully
+        '401':
+          description: Unauthorized
+        '404':
+          description: Activity not found
+
+  /attendance:
+    post:
+      summary: Mark attendance for a specific activity
+      tags:
+        - Attendance
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttendanceInput'
+      responses:
+        '201':
+          description: Attendance marked successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Attendance'
+        '400':
+          description: Invalid input
+        '401':
+          description: Unauthorized
+
+  /activities/{activityId}/attendance:
+    get:
+      summary: Get attendance records for an activity
+      tags:
+        - Attendance
+      parameters:
+        - name: activityId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Attendance'
+        '404':
+          description: Activity not found
+
+  /activities/report:
+    get:
+      summary: Generate and retrieve reports based on attendance and activity data
+      tags:
+        - Reports
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  # Define report structure here
+
+  /bookings:
+    post:
+      summary: Create a new booking
+      tags:
+        - Bookings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookingInput'
+      responses:
+        '201':
+          description: Booking created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+        '400':
+          description: Invalid input
+        '401':
+          description: Unauthorized
+
+  /bookings/{bookingId}:
+    get:
+      summary: Retrieve details of a specific booking
+      tags:
+        - Bookings
+      parameters:
+        - name: bookingId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+        '404':
+          description: Booking not found
+
+  /bookings/{bookingId}/confirm:
+    put:
+      summary: Confirm a booking
+      tags:
+        - Bookings
+      parameters:
+        - name: bookingId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Booking confirmed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+        '400':
+          description: Invalid operation
+        '404':
+          description: Booking not found
+
+  /bookings/{bookingId}:
+    delete:
+      summary: Cancel a booking
+      tags:
+        - Bookings
+      parameters:
+        - name: bookingId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Booking cancelled successfully
+        '404':
+          description: Booking not found
+
+  /payments:
+    post:
+      summary: Process payment for a booking
+      tags:
+        - Payments
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentInput'
+      responses:
+        '201':
+          description: Payment processed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+        '400':
+          description: Invalid input
+        '401':
+          description: Unauthorized
+
+  /bookings/user/{userId}:
+    get:
+      summary: Get all bookings for a specific user
+      tags:
+        - Bookings
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Booking'
+        '404':
+          description: User not found
+
+components:
+  schemas:
+    ActivityInput:
+      type: object
+      required:
+        - name
+        - date
+        - startTime
+        - endTime
+        - location
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        date:
+          type: string
+          format: date
+        startTime:
+          type: string
+          format: time
+        endTime:
+          type: string
+          format: time
+        location:
+          type: string
+
+    Activity:
+      type: object
+      properties:
+        activityId:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        date:
+          type: string
+          format: date
+        startTime:
+          type: string
+          format: time
+        endTime:
+          type: string
+          format: time
+        location:
+          type: string
+        createdBy:
+          type: string
+
+    AttendanceInput:
+      type: object
+      required:
+        - activityId
+        - userId
+        - status
+      properties:
+        activityId:
+          type: string
+        userId:
+          type: string
+        status:
+          type: string
+          enum: [Present, Absent, Excused]
+
+    Attendance:
+      type: object
+      properties:
+        attendanceId:
+          type: string
+        activityId:
+          type: string
+        userId:
+          type: string
+        status:
+          type: string
+          enum: [Present, Absent, Excused]
+
+    BookingInput:
+      type: object
+      required:
+        - activityId
+        - userId
+      properties:
+        activityId:
+          type: string
+        userId:
+          type: string
+
+    Booking:
+      type: object
+      properties:
+        bookingId:
+          type: string
+        activityId:
+          type: string
+        userId:
+          type: string
+        status:
+          type: string
+          enum: [Pending, Confirmed, Canceled]
+        bookingDate:
+          type: string
+          format: date-time
+        confirmation:
+          type: boolean
+
+    PaymentInput:
+      type: object
+      required:
+        - bookingId
+        - amount
+      properties:
+        bookingId:
+          type: string
+        amount:
+          type: number
+        
+    Payment:
+      type: object
+      properties:
+        paymentId:
+          type: string
+        bookingId:
+          type: string
+        amount:
+          type: number
+        status:
+          type: string
+          enum: [Pending, Complete, Failed]
+        transactionId:
+          type: string
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+
+security:
+  - BearerAuth: []
