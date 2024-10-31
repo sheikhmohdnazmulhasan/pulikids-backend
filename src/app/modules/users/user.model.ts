@@ -14,12 +14,17 @@ const userModel = new Schema<IUser>({
         type: String,
         required: true
     },
+    clerkId: {
+        type: String,
+        required: true
+    },
     role: {
         type: String,
         enum: ['admin', 'user'],
         default: "user"
     }
+}, {
+    timestamps: true
 });
-
 const User = mongoose.model<IUser>('user', userModel);
 export default User;
