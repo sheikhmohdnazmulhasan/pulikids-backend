@@ -17,11 +17,6 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
         success: true
     })
 
-    // res.status(200).json({
-    //     ss: "ssss"
-    // })
-
-
 });
 
 export const UserController = {
