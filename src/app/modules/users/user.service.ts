@@ -205,8 +205,6 @@ export async function requestPasswordResetService(email: string) {
         //            <p>Click this <a href="${resetUrl}">link</a> to reset your password.</p>`
         // });
 
-        console.log('reset token', resetToken);
-
         return {
             statusCode: StatusCodes.OK,
             success: true,
@@ -250,6 +248,7 @@ export async function resetPasswordService(payload: { token: string; newPassword
 
         // Update the password in Clerk and clear the reset token fields
         await clerkClient.users.updateUser(String(user.clerkId), { password: payload.newPassword });
+
         user.resetToken = undefined;
         user.resetTokenExpiry = undefined;
         await user.save();
