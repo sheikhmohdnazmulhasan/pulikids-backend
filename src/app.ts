@@ -10,7 +10,6 @@ const app: Application = express()
 app.use(express.json());
 app.use(cors());
 
-
 // test endpoint
 app.get('/', (req: Request, res: Response) => {
     res.send('Hello World')

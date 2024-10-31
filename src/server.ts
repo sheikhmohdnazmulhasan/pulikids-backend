@@ -12,8 +12,8 @@ let server: Server;
             await mongoose.connect(config.mongodb_uri as string);
             console.log("Pinged your deployment. You successfully connected to MongoDB!")
 
-            server = app.listen(config.port, () => {
-                console.log(`Pulikids app listening on port ${config.port}`);
+            server = app.listen(config.port || 5000, () => {
+                console.log(`Pulikids app listening on port ${config.port || 5000}`);
             });
 
         } catch (error) {
@@ -35,7 +35,6 @@ process.on('unhandledRejection', () => {
 
     process.exit(1);
 });
-
 
 // synchronies error handle
 process.on('uncaughtException', () => {
