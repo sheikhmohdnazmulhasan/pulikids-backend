@@ -8,13 +8,11 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
 
     const result = await UserService.createUserIntoDb(req.body as IUser);
 
-    console.log('service result ', result);
-
     sendResponse(res, {
-        data: 'ddd',
-        message: 'ddd',
-        statusCode: 200,
-        success: true
+        statusCode: result.statusCode,
+        success: result.success,
+        message: result.message,
+        data: result.data,
     })
 
 });
