@@ -30,8 +30,12 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
 
 });
 
+const resetPassword = catchAsync(async (req: Request, res: Response) => {
+    console.log(req.body);
+});
 
 export const UserController = {
     createUser,
-    loginUser
+    loginUser,
+    resetPassword
 };

@@ -77,7 +77,7 @@ async function createUserIntoDb({ email, password, firstName, lastName }: IUser)
     }
 };
 
-async function loginUserFromClerk(payload: { email: string; password: string }) {
+async function loginUserFromClerk(payload: { email: string; password: string; }) {
     try {
         // Find user by email in the database
         const user = await User.findOne({ email: payload.email });
@@ -160,10 +160,16 @@ async function loginUserFromClerk(payload: { email: string; password: string }) 
             };
         }
     }
+};
+
+async function resetPasswordWithClerk(payload: { email: string; }) {
+
+    console.log(payload);
 }
 
 // Export UserService object with various methods
 export const UserService = {
     createUserIntoDb,
-    loginUserFromClerk
+    loginUserFromClerk,
+    resetPasswordWithClerk
 };
