@@ -164,6 +164,61 @@ async function loginUserFromClerk(payload: { email: string; password: string; })
     }
 };
 
+async function changePasswordFromClerk(payload: { email: string; oldPassword: string; newPassword: string; }) {
+
+    try {
+        const user = await User.findOne({ email: payload.email });
+
+        if (!user) {
+            return {
+                statusCode: StatusCodes.NOT_FOUND,
+                success: false,
+                message: "User not found",
+                data: null
+            };
+        };
+
+        await clerkClient.users.verifyPassword({
+            userId: String(user.clerkId),
+            password: payload.oldPassword
+
+        }).then(() => {
+            clerkClient.users.updateUser(String(user.clerkId), {
+                password: payload.newPassword
+            });
+        });
+
+        return {
+            statusCode: StatusCodes.OK,
+            success: true,
+            message: "Password changed successfully. Please login with new password",
+            data: {
+                user: {
+                    name: `${user.firstName} ${user.lastName}`,
+                    email: user.email,
+                    role: user.role
+                }
+            }
+        };
+
+    } catch (error: any) {
+        // Check if the error is specific to Clerk
+        if (error.clerkError) {
+            // Format Clerk-specific error to match TResponse structure
+
+            return handleClerkError(error);
+        } else {
+            // Handle general errors
+            return {
+                statusCode: 500,
+                success: false,
+                message: "Internal Server Error",
+                data: null,
+            };
+        }
+    }
+}
+
 
 // Function to request a password reset
 export async function requestPasswordResetService(email: string) {
@@ -247,7 +302,7 @@ export async function resetPasswordService(payload: { token: string; newPassword
         return {
             statusCode: StatusCodes.OK,
             success: true,
-            message: "Password reset successful",
+            message: "Password reset successful. Please login with new password",
             data: {
                 user: {
                     name: `${user.firstName} ${user.lastName}`,
@@ -273,13 +328,14 @@ export async function resetPasswordService(payload: { token: string; newPassword
             };
         }
     }
-}
+};
 
 
 // Export UserService object with various methods
 export const UserService = {
     createUserIntoDb,
     loginUserFromClerk,
+    changePasswordFromClerk,
     requestPasswordResetService,
     resetPasswordService
 };

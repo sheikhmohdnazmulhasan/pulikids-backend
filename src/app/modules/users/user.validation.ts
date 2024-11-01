@@ -18,6 +18,15 @@ const loginUserValidation = z.object({
     })
 });
 
+// Validation schema for requesting a password change
+const passwordChangeValidation = z.object({
+    body: z.object({
+        email: z.string().email({ message: "Invalid email address" }),
+        oldPassword: z.string().nonempty({ message: "Old password is required" }),
+        newPassword: z.string().nonempty({ message: "New password is required" }),
+    })
+});
+
 // Validation schema for requesting a password reset
 const requestPasswordResetValidation = z.object({
     body: z.object({
@@ -37,6 +46,7 @@ const passwordResetValidation = z.object({
 export const UserValidation = {
     createUserValidation,
     loginUserValidation,
+    passwordChangeValidation,
     requestPasswordResetValidation,
     passwordResetValidation
 };

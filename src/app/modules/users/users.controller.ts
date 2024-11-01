@@ -31,6 +31,19 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
 });
 
 // Controller function for requesting password reset
+const changePassword = catchAsync(async (req: Request, res: Response) => {
+    const result = await UserService.changePasswordFromClerk(req.body); // Call the service
+
+    // Send response back to client
+    sendResponse(res, {
+        statusCode: result.statusCode,
+        success: result.success,
+        message: result.message,
+        data: result.data,
+    });
+});
+
+// Controller function for requesting password reset
 const requestPasswordReset = catchAsync(async (req: Request, res: Response) => {
     const result = await UserService.requestPasswordResetService(req.body.email); // Call the service to handle password reset request
 
@@ -61,5 +74,6 @@ export const UserController = {
     createUser,
     loginUser,
     requestPasswordReset,
+    changePassword,
     resetPassword
 };
