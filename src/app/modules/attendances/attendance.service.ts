@@ -2,6 +2,7 @@ import { IAttendance } from "./attendance.interface";
 import { StatusCodes } from "http-status-codes";
 import { Attendance } from "./attendance.model";
 import { JwtPayload } from "jsonwebtoken";
+import { userRole } from "../../constants/constant.user.role";
 
 /**
  * @param user - The authenticated user's JWT payload containing user information.
@@ -29,7 +30,10 @@ async function createAttendanceIntoDb(user: JwtPayload, payload: Partial<IAttend
         }
 
         // Prepare the data for insertion, including user ID
-        const data = { ...payload, userId: user._id };
+        const data = {
+            ...payload,
+            userId: user.role === userRole.ADMIN && payload.userId ? payload.userId : user._id
+        };
 
         // Create a new attendance entry in the database
         const insertResult = await Attendance.create(data);

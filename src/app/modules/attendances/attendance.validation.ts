@@ -9,6 +9,7 @@ const objectIdSchema = z.string().refine((val) => mongoose.Types.ObjectId.isVali
 const createAttendanceValidationSchema = z.object({
     body: z.object({
         activityId: objectIdSchema, // Validate activityId as a valid ObjectId
+        userId: objectIdSchema.optional(),
         status: z.enum(['present', 'absent', 'excused'], {
             required_error: "Status is required",
             invalid_type_error: "Status must be one of 'present', 'absent', or 'excused'"
