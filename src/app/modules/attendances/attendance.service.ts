@@ -64,9 +64,61 @@ async function createAttendanceIntoDb(user: JwtPayload, payload: Partial<IAttend
             data: null,
         };
     }
+};
+
+//  Retrieves all attendance records from the database, populating associated activity and user details.
+async function retrieveAllAttendancesFromDb() {
+    try {
+        // Fetch all attendance records, populating activity and user details
+        const result = await Attendance.find()
+            .populate({
+                path: 'activityId',
+                select: '_id name description date startTime endTime location createdBy',
+                populate: {
+                    path: 'createdBy',
+                    select: '_id firstName lastName email'
+                }
+            })
+            .populate({
+                path: 'userId',
+                select: '_id firstName lastName email'
+            })
+            .lean(); // Using lean() for a plain JavaScript object
+
+        // Check if there are no attendance records
+        if (!result.length) {
+            return {
+                statusCode: StatusCodes.NOT_FOUND,
+                success: false,
+                message: "No attendances available",
+                data: null,
+            };
+        }
+
+        // Successfully retrieved attendance records
+        return {
+            statusCode: StatusCodes.OK,
+            success: true,
+            message: "Attendances retrieved successfully",
+            data: result,
+        };
+
+    } catch (error) {
+        // Log the error for debugging
+        // console.error("Error retrieving attendances:", error);
+
+        // Handle unexpected errors with a generic response
+        return {
+            statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+            success: false,
+            message: "Internal Server Error",
+            data: null,
+        };
+    }
 }
 
 
 export const AttendanceService = {
-    createAttendanceIntoDb
+    createAttendanceIntoDb,
+    retrieveAllAttendancesFromDb
 }

@@ -12,4 +12,9 @@ router.post('/crate-attendance',
     ValidationRequest(AttendanceValidation.createAttendanceValidationSchema),
     AttendanceController.createAttendance);
 
+router.get('/',
+    Auth([userRole.ADMIN]),
+    // ValidationRequest(AttendanceValidation.createAttendanceValidationSchema),
+    AttendanceController.retrieveAllAttendances);
+
 export const AttendanceRoutes = router;
