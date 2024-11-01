@@ -26,14 +26,15 @@ function Auth(role: string[]) {
                 });
             } else {
                 const payload = decoded as JwtPayload;
-                if (!role.includes(payload.role)) {
+
+                if (!role.includes(payload.data.role)) {
                     res.status(401).json({
                         success: false,
                         statusCode: 401,
                         message: `You have no access to this route`
                     });
                 } else {
-                    req.user = payload;
+                    req.user = payload.data;
                     next();
                 }
             }
