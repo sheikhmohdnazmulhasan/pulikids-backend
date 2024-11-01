@@ -182,10 +182,10 @@ async function changePasswordFromClerk(payload: { email: string; oldPassword: st
             userId: String(user.clerkId),
             password: payload.oldPassword
 
-        }).then(() => {
-            clerkClient.users.updateUser(String(user.clerkId), {
-                password: payload.newPassword
-            });
+        });
+
+        await clerkClient.users.updateUser(String(user.clerkId), {
+            password: payload.newPassword
         });
 
         return {
