@@ -12,4 +12,9 @@ router.post('/create-activity',
     ValidationRequest(ActivityValidation.createActivityValidationSchema),
     ActivityController.createActivity);
 
+router.get('/',
+    // Auth([userRole.ADMIN, userRole.USER]),
+    // ValidationRequest(ActivityValidation.createActivityValidationSchema),
+    ActivityController.retrieveAllActivities);
+
 export const ActivityRouters = router;

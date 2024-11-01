@@ -38,7 +38,8 @@ async function createActivityIntoDb(user: JwtPayload, payload: Partial<IActivity
         }
 
     } catch (error) {
-        // Handle any unexpected errors and return an internal server error response
+        // Log any unexpected errors and return an internal server error response
+        // console.error(error); // Added logging for error visibility
         return {
             statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
             success: false,
@@ -48,13 +49,13 @@ async function createActivityIntoDb(user: JwtPayload, payload: Partial<IActivity
     }
 };
 
-//  Retrieves all activities from the database.
 async function retrieveAllActivitiesFromDb() {
     try {
-        // Fetch all activities from the database, returning plain JavaScript objects
-        const result = await Activity.find().lean();
+        const result = await Activity.find().populate({
+            path: 'createdBy',
+            select: '_id firstName lastName email'
+        }).lean()
 
-        // If no activities are found, return a not found response
         if (!result.length) {
             return {
                 statusCode: StatusCodes.NOT_FOUND,
@@ -64,16 +65,14 @@ async function retrieveAllActivitiesFromDb() {
             };
         }
 
-        // Return a success response with the retrieved activities
         return {
             statusCode: StatusCodes.OK,
             success: true,
-            message: "Activities retrieved successfully",
+            message: "Activities retrieve successfully",
             data: result
         };
 
     } catch (error) {
-        // Handle any unexpected errors and return an internal server error response
         return {
             statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
             success: false,
@@ -82,7 +81,6 @@ async function retrieveAllActivitiesFromDb() {
         };
     }
 }
-
 
 
 export const ActivityService = {
