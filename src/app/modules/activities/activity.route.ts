@@ -23,7 +23,7 @@ router.delete('/:activityId',
     ActivityController.deleteActivity);
 
 router.get('/report',
-    // Auth([userRole.ADMIN, userRole.USER]),
+    Auth([userRole.ADMIN]),
     // ValidationRequest(ActivityValidation.createActivityValidationSchema),
     ActivityController.getReport);
 
