@@ -107,7 +107,7 @@ async function loginUserFromClerk(payload: { email: string; password: string; })
                 email: user.email,
                 role: user.role
             }
-        }, config.jwt_access_token_secret as string, { expiresIn: '3h' });
+        }, config.jwt_access_token_secret as string, { expiresIn: '7d' });
 
         // If access token creation fails, return NOT_IMPLEMENTED response
         if (!accessToken) {
@@ -165,11 +165,14 @@ async function loginUserFromClerk(payload: { email: string; password: string; })
     }
 };
 
+//  Changes the password for a user through the Clerk authentication service.
 async function changePasswordFromClerk(payload: { email: string; oldPassword: string; newPassword: string; }) {
 
     try {
+        // Find the user by email in the database
         const user = await User.findOne({ email: payload.email });
 
+        // If user is not found, return a not found response
         if (!user) {
             return {
                 statusCode: StatusCodes.NOT_FOUND,
@@ -177,18 +180,20 @@ async function changePasswordFromClerk(payload: { email: string; oldPassword: st
                 message: "User not found",
                 data: null
             };
-        };
+        }
 
+        // Verify the old password with Clerk
         await clerkClient.users.verifyPassword({
             userId: String(user.clerkId),
             password: payload.oldPassword
-
         });
 
+        // Update the user's password in Clerk
         await clerkClient.users.updateUser(String(user.clerkId), {
             password: payload.newPassword
         });
 
+        // Return a success response after password change
         return {
             statusCode: StatusCodes.OK,
             success: true,
@@ -206,13 +211,12 @@ async function changePasswordFromClerk(payload: { email: string; oldPassword: st
     } catch (error: any) {
         // Check if the error is specific to Clerk
         if (error.clerkError) {
-            // Format Clerk-specific error to match TResponse structure
-
+            // Handle Clerk-specific error and return formatted response
             return handleClerkError(error);
         } else {
-            // Handle general errors
+            // Handle general errors and return internal server error response
             return {
-                statusCode: 500,
+                statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
                 success: false,
                 message: "Internal Server Error",
                 data: null,
@@ -220,6 +224,7 @@ async function changePasswordFromClerk(payload: { email: string; oldPassword: st
         }
     }
 }
+
 
 
 // Function to request a password reset
