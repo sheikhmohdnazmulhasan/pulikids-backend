@@ -115,10 +115,62 @@ async function retrieveAllAttendancesFromDb() {
             data: null,
         };
     }
-}
+};
+
+//  Retrieves attendance records from the database based on a specific activity ID.
+async function retrieveActivityBasedAttendancesFromDb(activityId: string) {
+    try {
+        // Retrieve all attendance records associated with the specified activityId
+        const result = await Attendance.find({ activityId })
+            .populate({
+                path: 'activityId',
+                select: '_id name description date startTime endTime location createdBy',
+                populate: {
+                    path: 'createdBy',
+                    select: '_id firstName lastName email'
+                }
+            })
+            .populate({
+                path: 'userId',
+                select: '_id firstName lastName email'
+            })
+            .lean();
+
+        // Check if there are no attendance records for the specified activity
+        if (!result.length) {
+            return {
+                statusCode: StatusCodes.NOT_FOUND,
+                success: false,
+                message: "No attendances available for the specified activity",
+                data: null,
+            };
+        }
+
+        // Successfully retrieved attendance records
+        return {
+            statusCode: StatusCodes.OK,
+            success: true,
+            message: "Activity-based attendances retrieved successfully",
+            data: result,
+        };
+
+    } catch (error) {
+        // Log the error for debugging
+        // console.error("Error retrieving activity-based attendances:", error);
+
+        // Return an internal server error response
+        return {
+            statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+            success: false,
+            message: "Internal Server Error",
+            data: null,
+        };
+    }
+};
 
 
 export const AttendanceService = {
     createAttendanceIntoDb,
-    retrieveAllAttendancesFromDb
+    retrieveAllAttendancesFromDb,
+    retrieveActivityBasedAttendancesFromDb
 }

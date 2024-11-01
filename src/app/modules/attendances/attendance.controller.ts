@@ -25,7 +25,20 @@ const retrieveAllAttendances = catchAsync(async (req: Request, res: Response) =>
     });
 });
 
+const retrieveActivityBasedAttendances = catchAsync(async (req: Request, res: Response) => {
+    const result = await AttendanceService.retrieveActivityBasedAttendancesFromDb(req.params.activityId);
+
+    sendResponse(res, {
+        statusCode: result.statusCode,
+        success: result.success,
+        message: result.message,
+        data: result.data,
+    });
+});
+
+
 export const AttendanceController = {
     createAttendance,
-    retrieveAllAttendances
+    retrieveAllAttendances,
+    retrieveActivityBasedAttendances
 }

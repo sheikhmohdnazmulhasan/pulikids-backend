@@ -17,4 +17,9 @@ router.get('/',
     // ValidationRequest(AttendanceValidation.createAttendanceValidationSchema),
     AttendanceController.retrieveAllAttendances);
 
+router.get('/:activityId',
+    Auth([userRole.ADMIN]),
+    // ValidationRequest(AttendanceValidation.createAttendanceValidationSchema),
+    AttendanceController.retrieveActivityBasedAttendances);
+
 export const AttendanceRoutes = router;
