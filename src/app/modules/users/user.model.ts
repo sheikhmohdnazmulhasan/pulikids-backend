@@ -35,5 +35,5 @@ const userModel = new Schema<IUser>({
     timestamps: true,
     versionKey: false
 });
-const User = mongoose.model<IUser>('user', userModel);
+const User = mongoose.model<IUser>('User', userModel);
 export default User;

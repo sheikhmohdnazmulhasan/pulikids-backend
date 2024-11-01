@@ -40,7 +40,7 @@ async function createUserIntoDb({ email, password, firstName, lastName }: IUser)
                     statusCode: StatusCodes.OK,
                     success: true,
                     message: 'User registered successfully. Please log in.',
-                    data: saveUserToDb
+                    data: { ...saveUserToDb, _id: saveUserToDb._id }
                 };
 
             } else {
@@ -135,6 +135,7 @@ async function loginUserFromClerk(payload: { email: string; password: string; })
             message: "User logged in successfully",
             data: {
                 user: {
+                    _id: user._id,
                     name: `${user.firstName} ${user.lastName}`,
                     email: user.email,
                     role: user.role
@@ -194,6 +195,7 @@ async function changePasswordFromClerk(payload: { email: string; oldPassword: st
             message: "Password changed successfully. Please login with new password",
             data: {
                 user: {
+                    _id: user._id,
                     name: `${user.firstName} ${user.lastName}`,
                     email: user.email,
                     role: user.role
@@ -257,6 +259,7 @@ export async function requestPasswordResetService(email: string) {
             message: "Password reset email sent. Please check your inbox.",
             data: {
                 user: {
+                    _id: user._id,
                     name: `${user.firstName} ${user.lastName}`,
                     email: user.email,
                     role: user.role
@@ -305,6 +308,7 @@ export async function resetPasswordService(payload: { token: string; newPassword
             message: "Password reset successful. Please login with new password",
             data: {
                 user: {
+                    _id: user._id,
                     name: `${user.firstName} ${user.lastName}`,
                     email: user.email,
                     role: user.role
