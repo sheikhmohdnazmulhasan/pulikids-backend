@@ -36,8 +36,20 @@ const retrieveSingleActivity = catchAsync(async (req: Request, res: Response) =>
     });
 });
 
+const updateActivity = catchAsync(async (req: Request, res: Response) => {
+    const result = await ActivityService.updateActivityFromDb(req.params.activityId, req.user, req.body)
+
+    sendResponse(res, {
+        statusCode: result.statusCode,
+        success: result.success,
+        message: result.message,
+        data: result.data,
+    });
+});
+
 export const ActivityController = {
     createActivity,
     retrieveAllActivities,
-    retrieveSingleActivity
+    retrieveSingleActivity,
+    updateActivity
 }

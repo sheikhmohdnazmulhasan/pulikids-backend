@@ -12,6 +12,11 @@ router.post('/create-activity',
     ValidationRequest(ActivityValidation.createActivityValidationSchema),
     ActivityController.createActivity);
 
+router.put('/:activityId',
+    Auth([userRole.ADMIN, userRole.USER]),
+    ValidationRequest(ActivityValidation.updateActivityValidationSchema),
+    ActivityController.updateActivity);
+
 router.get('/',
     // Auth([userRole.ADMIN, userRole.USER]),
     // ValidationRequest(ActivityValidation.createActivityValidationSchema),
