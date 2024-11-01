@@ -17,6 +17,9 @@ const attendanceSchema: Schema = new Schema<IAttendance>({
         enum: ['present', 'absent', 'excused'], // Allowed values
         required: true
     }
+}, {
+    timestamps: true,
+    versionKey: false
 });
 
 export const Attendance = mongoose.model('Attendance', attendanceSchema)

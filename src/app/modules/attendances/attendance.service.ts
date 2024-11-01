@@ -1,10 +1,12 @@
 import { IAttendance } from "./attendance.interface";
 import { StatusCodes } from "http-status-codes";
 import { Attendance } from "./attendance.model";
+import { JwtPayload } from "jsonwebtoken";
 
-async function createAttendanceIntoDb(payload: IAttendance) {
+async function createAttendanceIntoDb(user: JwtPayload, payload: Partial<IAttendance>) {
     try {
-        const insertResult = await Attendance.create(payload);
+        const data = { ...payload, userId: user._id }
+        const insertResult = await Attendance.create(data);
 
         if (insertResult) {
             return {
@@ -24,12 +26,14 @@ async function createAttendanceIntoDb(payload: IAttendance) {
         };
 
     } catch (error) {
+        console.log(error);
         return {
             statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
             success: false,
             message: "Internal Server Error",
             data: null,
         };
+
     };
 };
 

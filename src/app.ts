@@ -50,7 +50,7 @@ app.all('*', (req: Request, res: Response) => {
     res.status(StatusCodes.NOT_FOUND).json({
         success: false,
         statusCode: StatusCodes.NOT_FOUND,
-        message: "Not Found",
+        message: "Endpoint Not Found",
     });
 
 })
