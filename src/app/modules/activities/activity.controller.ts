@@ -25,7 +25,19 @@ const retrieveAllActivities = catchAsync(async (req: Request, res: Response) => 
     });
 });
 
+const retrieveSingleActivity = catchAsync(async (req: Request, res: Response) => {
+    const result = await ActivityService.retrieveSingleActivityFromDb(req.params.activityId)
+
+    sendResponse(res, {
+        statusCode: result.statusCode,
+        success: result.success,
+        message: result.message,
+        data: result.data,
+    });
+});
+
 export const ActivityController = {
     createActivity,
-    retrieveAllActivities
+    retrieveAllActivities,
+    retrieveSingleActivity
 }

@@ -17,4 +17,9 @@ router.get('/',
     // ValidationRequest(ActivityValidation.createActivityValidationSchema),
     ActivityController.retrieveAllActivities);
 
+router.get('/:activityId',
+    // Auth([userRole.ADMIN, userRole.USER]),
+    // ValidationRequest(ActivityValidation.createActivityValidationSchema),
+    ActivityController.retrieveSingleActivity);
+
 export const ActivityRouters = router;

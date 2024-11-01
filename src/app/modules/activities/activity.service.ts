@@ -49,13 +49,16 @@ async function createActivityIntoDb(user: JwtPayload, payload: Partial<IActivity
     }
 };
 
+//  Retrieves all activities from the database, including details of the user who created each activity.
 async function retrieveAllActivitiesFromDb() {
     try {
+        // Fetch all activities from the database and populate the 'createdBy' field with user details
         const result = await Activity.find().populate({
-            path: 'createdBy',
-            select: '_id firstName lastName email'
-        }).lean()
+            path: 'createdBy', // Field to populate
+            select: '_id firstName lastName email' // Fields to select from the populated document
+        }).lean(); // Use lean() to return plain JavaScript objects
 
+        // If no activities are found, return a not found response
         if (!result.length) {
             return {
                 statusCode: StatusCodes.NOT_FOUND,
@@ -65,14 +68,54 @@ async function retrieveAllActivitiesFromDb() {
             };
         }
 
+        // Return a success response with the retrieved activities
         return {
             statusCode: StatusCodes.OK,
             success: true,
-            message: "Activities retrieve successfully",
+            message: "Activities retrieved successfully",
             data: result
         };
 
     } catch (error) {
+        // Handle any unexpected errors and return an internal server error response
+        return {
+            statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+            success: false,
+            message: "Internal Server Error",
+            data: null
+        };
+    }
+};
+
+//  Retrieves a single activity from the database by its ID, including details of the user who created it.
+async function retrieveSingleActivityFromDb(activityId: string) {
+    try {
+        // Fetch the activity by ID and populate the 'createdBy' field with user details
+        const result = await Activity.findById(activityId).populate({
+            path: 'createdBy', // Field to populate
+            select: '_id firstName lastName email' // Fields to select from the populated document
+        }).lean(); // Use lean() to return a plain JavaScript object
+
+        // If the activity is not found, return a not found response
+        if (!result) {
+            return {
+                statusCode: StatusCodes.NOT_FOUND,
+                success: true,
+                message: "No activity found with the given ID",
+                data: null
+            };
+        }
+
+        // Return a success response with the retrieved activity
+        return {
+            statusCode: StatusCodes.OK,
+            success: true,
+            message: "Activity retrieved successfully",
+            data: result
+        };
+
+    } catch (error) {
+        // Handle any unexpected errors and return an internal server error response
         return {
             statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
             success: false,
@@ -83,7 +126,9 @@ async function retrieveAllActivitiesFromDb() {
 }
 
 
+
 export const ActivityService = {
     createActivityIntoDb,
-    retrieveAllActivitiesFromDb
+    retrieveAllActivitiesFromDb,
+    retrieveSingleActivityFromDb,
 }
