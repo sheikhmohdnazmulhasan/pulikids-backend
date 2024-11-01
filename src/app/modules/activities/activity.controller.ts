@@ -47,9 +47,21 @@ const updateActivity = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
+const deleteActivity = catchAsync(async (req: Request, res: Response) => {
+    const result = await ActivityService.deleteActivityFromDb(req.user, req.params.activityId);
+
+    sendResponse(res, {
+        statusCode: result.statusCode,
+        success: result.success,
+        message: result.message,
+        data: result.data,
+    });
+});
+
 export const ActivityController = {
     createActivity,
     retrieveAllActivities,
     retrieveSingleActivity,
-    updateActivity
+    updateActivity,
+    deleteActivity
 }

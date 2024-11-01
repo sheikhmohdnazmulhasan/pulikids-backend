@@ -17,6 +17,13 @@ router.put('/:activityId',
     ValidationRequest(ActivityValidation.updateActivityValidationSchema),
     ActivityController.updateActivity);
 
+router.delete('/:activityId',
+    Auth([userRole.ADMIN, userRole.USER]),
+    // ValidationRequest(ActivityValidation.updateActivityValidationSchema),
+    ActivityController.deleteActivity);
+
+
+
 router.get('/',
     // Auth([userRole.ADMIN, userRole.USER]),
     // ValidationRequest(ActivityValidation.createActivityValidationSchema),

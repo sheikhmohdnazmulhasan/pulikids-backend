@@ -3,6 +3,8 @@ import { IActivity } from "./activity.interface";
 import Activity from "./activity.model";
 import { StatusCodes } from "http-status-codes";
 import { userRole } from "../../constants/constant.user.role";
+import { Attendance } from "../attendances/attendance.model";
+import mongoose from "mongoose";
 
 /**
  * @param user - The authenticated user's JWT payload containing user information.
@@ -137,7 +139,7 @@ async function retrieveSingleActivityFromDb(activityId: string) {
 async function updateActivityFromDb(activityId: string, user: JwtPayload, payload: Partial<IActivity>) {
     try {
         // Retrieve the activity by its ID
-        const activity = await Activity.findById(activityId);
+        const activity = await Activity.findById(activityId).lean();
 
         // Log activity and user IDs for debugging
         // console.log({ activity: String(activity?.createdBy), user: user._id });
@@ -192,13 +194,100 @@ async function updateActivityFromDb(activityId: string, user: JwtPayload, payloa
             data: null
         };
     }
-}
+};
 
+// delete activity and corresponding attendances
+async function deleteActivityFromDb(user: JwtPayload, activityId: string) {
+    // Start a new MongoDB session for transaction management
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
+    try {
+        // Find the activity by ID within the current session
+        const activity = await Activity.findById(activityId).session(session);
+
+        // If activity does not exist, abort the transaction and return a not-found response
+        if (!activity) {
+            await session.abortTransaction();
+            return {
+                statusCode: StatusCodes.NOT_FOUND,
+                success: false,
+                message: "Activity not found: No record matches the provided ID.",
+                data: null
+            };
+        }
+
+        // Check if user has permission to delete the activity (must be an admin or the creator)
+        if (user.role !== userRole.ADMIN && String(activity.createdBy) !== String(user._id)) {
+            await session.abortTransaction();
+            return {
+                statusCode: StatusCodes.UNAUTHORIZED,
+                success: false,
+                message: "Unauthorized access: Only administrators or creators can delete this activity.",
+                data: null
+            };
+        }
+
+        // Attempt to delete the activity from the database
+        const deleteActivity = await Activity.findByIdAndDelete(activityId).session(session);
+
+        // If activity deletion fails, abort the transaction and return a failure response
+        if (!deleteActivity) {
+            await session.abortTransaction();
+            return {
+                statusCode: StatusCodes.BAD_REQUEST,
+                success: false,
+                message: "Activity deletion failed: Unable to remove the activity. Please try again.",
+                data: null
+            };
+        }
+
+        // Attempt to delete all corresponding attendance records linked to the activity
+        const deleteCorrespondingAttendance = await Attendance.deleteMany({ activityId }).session(session);
+
+        // If deleting attendances fails, abort the transaction and return a failure response
+        if (!deleteCorrespondingAttendance) {
+            await session.abortTransaction();
+            return {
+                statusCode: StatusCodes.BAD_REQUEST,
+                success: false,
+                message: "Attendance deletion failed: Unable to remove corresponding attendance records. Please try again.",
+                data: null
+            };
+        }
+
+        // Commit the transaction if all deletions are successful
+        await session.commitTransaction();
+
+        // Return success response after successfully deleting activity and attendances
+        return {
+            statusCode: StatusCodes.OK,
+            success: true,
+            message: "Activity and associated attendance records successfully deleted.",
+            data: null
+        };
+
+    } catch (error) {
+        // In case of an error, abort the transaction and return an internal server error response
+        await session.abortTransaction();
+        return {
+            statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+            success: false,
+            message: "An error occurred during the deletion process. Please try again later.",
+            data: null
+        };
+
+    } finally {
+        // End the session regardless of success or failure
+        session.endSession();
+    }
+}
 
 
 export const ActivityService = {
     createActivityIntoDb,
     retrieveAllActivitiesFromDb,
     retrieveSingleActivityFromDb,
-    updateActivityFromDb
+    updateActivityFromDb,
+    deleteActivityFromDb
 }
