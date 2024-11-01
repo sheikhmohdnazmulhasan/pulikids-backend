@@ -41,11 +41,23 @@ async function createBookingIntoDb(user: JwtPayload, newBooking: Partial<IBookin
         const booking = new Booking({ ...newBooking, userId: user._id });
         await booking.save();
 
+        // Populate fields for user and activity details
+        const populatedBooking = await booking.populate([
+            {
+                path: 'userId',
+                select: '_id firstName lastName email'
+            }, // Populate user details
+            {
+                path: 'activityId',
+                select: '_id name description location'
+            } // Populate activity details
+        ])
+
         return {
             statusCode: StatusCodes.CREATED,
             success: true,
             message: "Your booking has been successfully created.",
-            data: booking,
+            data: populatedBooking,
         };
 
     } catch (error) {
