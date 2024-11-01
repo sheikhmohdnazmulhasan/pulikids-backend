@@ -5,6 +5,7 @@ import { StatusCodes } from "http-status-codes";
 import { userRole } from "../../constants/constant.user.role";
 import { Attendance } from "../attendances/attendance.model";
 import mongoose from "mongoose";
+import User from "../users/user.model";
 
 /**
  * @param user - The authenticated user's JWT payload containing user information.
@@ -281,6 +282,92 @@ async function deleteActivityFromDb(user: JwtPayload, activityId: string) {
         // End the session regardless of success or failure
         session.endSession();
     }
+};
+
+async function getReportFromDb() {
+    try {
+        const usersReport = await User.aggregate([
+            {
+                $lookup: {
+                    from: 'activities',
+                    localField: '_id',
+                    foreignField: 'createdBy',
+                    as: 'activities'
+                }
+            },
+            {
+                $lookup: {
+                    from: 'attendances',
+                    localField: '_id',
+                    foreignField: 'userId',
+                    as: 'attendances'
+                }
+            },
+            {
+                $lookup: {
+                    from: 'attendances',
+                    localField: 'activities._id',
+                    foreignField: 'activityId',
+                    as: 'activityAttendances'
+                }
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'activityAttendances.userId',
+                    foreignField: '_id',
+                    as: 'activityAttendances.attendees'
+                }
+            },
+            {
+                $addFields: {
+                    activityCount: { $cond: { if: { $isArray: "$activities" }, then: { $size: "$activities" }, else: 0 } },
+                    attendanceCount: { $cond: { if: { $isArray: "$attendances" }, then: { $size: "$attendances" }, else: 0 } }
+                }
+            },
+            {
+                $project: {
+                    firstName: 1,
+                    lastName: 1,
+                    email: 1,
+                    activityCount: 1,
+                    attendanceCount: 1,
+                    activities: {
+                        _id: 1,
+                        name: 1,
+                        attendanceCount: { $cond: { if: { $isArray: "$activityAttendances" }, then: { $size: "$activityAttendances" }, else: 0 } },
+                        attendees: "$activityAttendances.attendees"
+                    }
+                }
+            }
+        ]);
+
+        if (!usersReport.length) {
+            return {
+                statusCode: StatusCodes.NOT_FOUND,
+                success: false,
+                message: "No users found for report generation",
+                data: null
+            };
+        };
+
+        return {
+            statusCode: StatusCodes.NOT_FOUND,
+            success: true,
+            message: "User activity report generated successfully",
+            data: usersReport
+        };
+
+    } catch (error) {
+
+        console.log(error);
+        return {
+            statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+            success: true,
+            message: "Internal server error",
+            data: null
+        };
+    }
 }
 
 
@@ -289,5 +376,6 @@ export const ActivityService = {
     retrieveAllActivitiesFromDb,
     retrieveSingleActivityFromDb,
     updateActivityFromDb,
-    deleteActivityFromDb
+    deleteActivityFromDb,
+    getReportFromDb
 }

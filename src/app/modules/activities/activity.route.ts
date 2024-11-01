@@ -22,7 +22,10 @@ router.delete('/:activityId',
     // ValidationRequest(ActivityValidation.updateActivityValidationSchema),
     ActivityController.deleteActivity);
 
-
+router.get('/report',
+    // Auth([userRole.ADMIN, userRole.USER]),
+    // ValidationRequest(ActivityValidation.createActivityValidationSchema),
+    ActivityController.getReport);
 
 router.get('/',
     // Auth([userRole.ADMIN, userRole.USER]),
