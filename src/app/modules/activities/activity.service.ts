@@ -7,6 +7,7 @@ async function createActivityIntoDb(user: JwtPayload, payload: Partial<IActivity
         const data = { ...payload, createdBy: user._id };
         console.log(data);
 
+
     } catch (error) {
         return {
             statusCode: 500,
