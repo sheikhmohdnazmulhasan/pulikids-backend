@@ -9,6 +9,9 @@ const activitySchema = new Schema<IActivity>({
     endTime: { type: String, required: true },
     location: { type: String, required: true },
     createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+}, {
+    timestamps: true,
+    versionKey: false
 });
 
 const Activity = mongoose.model<IActivity>('Activity', activitySchema);
