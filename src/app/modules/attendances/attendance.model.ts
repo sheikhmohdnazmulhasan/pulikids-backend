@@ -24,6 +24,6 @@ const attendanceSchema: Schema = new Schema<IAttendance>({
 
 export const Attendance = mongoose.model('Attendance', attendanceSchema)
 
-// // Index to ensure a user can only have one attendance record per activity
+// Index to ensure a user can only have one attendance record per activity
 // AttendanceSchema.index({ activityId: 1, userId: 1 }, { unique: true });
 // export default mongoose.model<IAttendance>('Attendance', AttendanceSchema);

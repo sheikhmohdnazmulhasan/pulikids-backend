@@ -5,6 +5,20 @@ import { JwtPayload } from "jsonwebtoken";
 
 async function createAttendanceIntoDb(user: JwtPayload, payload: Partial<IAttendance>) {
     try {
+        const isExist = await Attendance.findOne({
+            activityId: payload.activityId,
+            userId: user._id
+        });
+
+        if (isExist) {
+            return {
+                statusCode: StatusCodes.BAD_REQUEST,
+                success: false,
+                message: "Attendance already recorded: each user can only register attendance once per activity.",
+                data: null,
+            };
+        }
+
         const data = { ...payload, userId: user._id }
         const insertResult = await Attendance.create(data);
 
