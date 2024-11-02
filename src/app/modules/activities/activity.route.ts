@@ -7,34 +7,34 @@ import { ActivityValidation } from "./activity.validation";
 
 const router = Router();
 
+// Route for creating a new activity (ADMIN, USER roles)
 router.post('/create-activity',
     Auth([userRole.ADMIN, userRole.USER]),
     ValidationRequest(ActivityValidation.createActivityValidationSchema),
-    ActivityController.createActivity);
+    ActivityController.createActivity
+);
 
+// Route for updating an activity by ID (ADMIN, USER roles)
 router.put('/:activityId',
     Auth([userRole.ADMIN, userRole.USER]),
     ValidationRequest(ActivityValidation.updateActivityValidationSchema),
-    ActivityController.updateActivity);
+    ActivityController.updateActivity
+);
 
+// Route for deleting an activity by ID (ADMIN, USER roles)
 router.delete('/:activityId',
     Auth([userRole.ADMIN, userRole.USER]),
-    // ValidationRequest(ActivityValidation.updateActivityValidationSchema),
-    ActivityController.deleteActivity);
+    ActivityController.deleteActivity
+);
 
+// Route for generating activity report (ADMIN role only)
 router.get('/report',
     Auth([userRole.ADMIN]),
-    // ValidationRequest(ActivityValidation.createActivityValidationSchema),
-    ActivityController.getReport);
+    ActivityController.getReport
+);
 
-router.get('/',
-    // Auth([userRole.ADMIN, userRole.USER]),
-    // ValidationRequest(ActivityValidation.createActivityValidationSchema),
-    ActivityController.retrieveAllActivities);
-
-router.get('/:activityId',
-    // Auth([userRole.ADMIN, userRole.USER]),
-    // ValidationRequest(ActivityValidation.createActivityValidationSchema),
-    ActivityController.retrieveSingleActivity);
+// Routes for retrieving activities
+router.get('/', ActivityController.retrieveAllActivities); // All activities
+router.get('/:activityId', ActivityController.retrieveSingleActivity); // Single activity by ID
 
 export const ActivityRouters = router;

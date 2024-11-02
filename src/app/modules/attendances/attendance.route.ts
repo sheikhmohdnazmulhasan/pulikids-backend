@@ -7,19 +7,23 @@ import { AttendanceValidation } from "./attendance.validation";
 
 const router = Router();
 
-router.post('/crate-attendance',
+// Route to create attendance (ADMIN, USER roles)
+router.post('/create-attendance',
     Auth([userRole.ADMIN, userRole.USER]),
     ValidationRequest(AttendanceValidation.createAttendanceValidationSchema),
-    AttendanceController.createAttendance);
+    AttendanceController.createAttendance
+);
 
+// Route to retrieve all attendances (ADMIN role only)
 router.get('/',
     Auth([userRole.ADMIN]),
-    // ValidationRequest(AttendanceValidation.createAttendanceValidationSchema),
-    AttendanceController.retrieveAllAttendances);
+    AttendanceController.retrieveAllAttendances
+);
 
+// Route to retrieve attendances for a specific activity (ADMIN role only)
 router.get('/:activityId',
     Auth([userRole.ADMIN]),
-    // ValidationRequest(AttendanceValidation.createAttendanceValidationSchema),
-    AttendanceController.retrieveActivityBasedAttendances);
+    AttendanceController.retrieveActivityBasedAttendances
+);
 
 export const AttendanceRoutes = router;

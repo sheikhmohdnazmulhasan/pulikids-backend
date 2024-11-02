@@ -40,7 +40,14 @@ async function createUserIntoDb({ email, password, firstName, lastName }: IUser)
                     statusCode: StatusCodes.OK,
                     success: true,
                     message: 'User registered successfully. Please log in.',
-                    data: { ...saveUserToDb, _id: saveUserToDb._id }
+                    data: {
+                        user: {
+                            firstName: saveUserToDb.firstName,
+                            lastName: saveUserToDb.lastName,
+                            email: saveUserToDb.email,
+                            role: saveUserToDb.role
+                        }
+                    }
                 };
 
             } else {
