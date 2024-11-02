@@ -11,7 +11,7 @@ Pulikids is a modern child care management platform serving nurseries, schools, 
 ## Folder Structure
 
 ```
-pulikids/
+pulikids-backend/
 │
 ├── src/
 │   ├── users/
@@ -640,11 +640,13 @@ pulikids/
 
   - Response:
 
-    ```json
-    {
-      "statusCode": 200,
-      "success": true,
-      "message": "Booking deleted successfully.",
-      "data": null
-    }
-    ```
+        ```json
+        {
+          "statusCode": 200,
+          "success": true,
+          "message": "Booking deleted successfully.",
+          "data": null
+        }
+        ```
+
+    <img src="https://i.ibb.co.com/x803hXH/Screenshot-2024-11-02-200221.png" alt="database er diagram">
