@@ -47,9 +47,21 @@ const retrieveUserBookings = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
+const updateBookingStatus = catchAsync(async (req: Request, res: Response) => {
+    const result = await BookingService.updateBookingStatusIntoDb(req.params.bookingId, req.body);
+
+    sendResponse(res, {
+        statusCode: result.statusCode,
+        success: result.success,
+        message: result.message,
+        data: result.data,
+    });
+});
+
 export const BookingController = {
     createBooking,
     retrieveAllBookings,
     retrieveSingleBooking,
-    retrieveUserBookings
+    retrieveUserBookings,
+    updateBookingStatus
 }

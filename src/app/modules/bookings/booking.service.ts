@@ -191,9 +191,68 @@ async function retrieveUserBookingsFromDb(userId: string) {
     }
 };
 
+async function updateBookingStatusIntoDb(bookingId: string, payload: { status: 'confirmed' | 'canceled' }) {
+    try {
+        // Fetch the booking by its ID
+        const booking = await Booking.findById(bookingId);
+
+        // Check if the booking exists
+        if (!booking) {
+            return {
+                statusCode: StatusCodes.NOT_FOUND,
+                success: false,
+                message: "Booking not found. Please check the booking ID and try again.",
+                data: null,
+            };
+        };
+
+        // Check if the booking status is not 'pending' to allow updates
+        if (booking.status !== 'pending') {
+            return {
+                statusCode: StatusCodes.NOT_ACCEPTABLE,
+                success: false,
+                message: "Booking status cannot be updated as it is already confirmed or canceled.",
+                data: null,
+            };
+        };
+
+        // Update the booking status
+        booking.status = payload.status;
+        await booking.save();
+
+        // Populate related activity and user information for the response
+        const populatedBookingForResponse = await (await booking.populate({
+            path: 'activityId',
+            select: 'name description location',
+        })).populate({
+            path: 'userId',
+            select: 'firstName lastName email'
+        });
+
+        // Return success response with updated booking details
+        return {
+            statusCode: StatusCodes.OK,
+            success: true,
+            message: `Booking status updated successfully to '${payload.status}'.`,
+            data: populatedBookingForResponse,
+        };
+
+    } catch (error) {
+        // Handle any unexpected errors
+        return {
+            statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+            success: false,
+            message: "An unexpected error occurred while updating the booking status. Please try again later.",
+            data: null,
+        };
+    }
+}
+
+
 export const BookingService = {
     createBookingIntoDb,
     retrieveAllBookingsFromDb,
     retrieveSingleBookingFromDb,
-    retrieveUserBookingsFromDb
+    retrieveUserBookingsFromDb,
+    updateBookingStatusIntoDb
 }

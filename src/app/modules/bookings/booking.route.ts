@@ -27,4 +27,9 @@ router.get('/user/:userId',
     // ValidationRequest(BookingValidation.createBookingSchemaValidation),
     BookingController.retrieveUserBookings);
 
+router.patch('/action/status/:bookingId',
+    Auth([userRole.ADMIN]),
+    ValidationRequest(BookingValidation.updateBookingSchemaValidation),
+    BookingController.updateBookingStatus);
+
 export const BookingRoutes = router;

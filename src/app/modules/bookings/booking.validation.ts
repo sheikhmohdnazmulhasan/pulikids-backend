@@ -8,6 +8,14 @@ export const createBookingSchemaValidation = z.object({
     })
 });
 
+// Define the schema for updating a booking
+export const updateBookingSchemaValidation = z.object({
+    body: z.object({
+        status: z.enum(['confirmed', 'canceled']),
+    }),
+});
+
 export const BookingValidation = {
-    createBookingSchemaValidation
+    createBookingSchemaValidation,
+    updateBookingSchemaValidation
 }
