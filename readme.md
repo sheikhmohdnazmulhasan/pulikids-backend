@@ -640,13 +640,75 @@ pulikids-backend/
 
   - Response:
 
-        ```json
-        {
-          "statusCode": 200,
-          "success": true,
-          "message": "Booking deleted successfully.",
-          "data": null
+    ```json
+    {
+      "statusCode": 200,
+      "success": true,
+      "message": "Booking deleted successfully.",
+      "data": null
+    }
+    ```
+
+#### Get Report
+
+- **GET** /api/v1/activities/report
+
+  - Response:
+
+    ````json
+    {
+        "statusCode": 200,
+        "success": true,
+        "message": "User activity report generated successfully",
+        "data": [
+            {
+                "_id": "6725e17ee95b6191e7dba94f",
+                "firstName": "Nazmul",
+                "lastName": "Hasan",
+                "email": "nazmul@example.com",
+                "activities": [],
+                "activityCount": 0,
+                "attendanceCount": 0
+            },
+            {
+                "_id": "6725e20a33d3cd7cc9b40d84",
+                "firstName": "Nazmul",
+                "lastName": "Hasan",
+                "email": "nazmul2@example.com",
+                "activities": [],
+                "activityCount": 0,
+                "attendanceCount": 0
+            },
+            {
+                "_id": "6725e486c784d468558853ac",
+                "firstName": "Nazmul",
+                "lastName": "Hasan",
+                "email": "nazmul25@example.com",
+                "activities": [],
+                "activityCount": 0,
+                "attendanceCount": 0
+            },
+            {
+                "_id": "6725e4a6c784d468558853ae",
+                "firstName": "Nazmul",
+                "lastName": "Hasan",
+                "email": "user@example.com",
+                "activities": [
+                    {
+                        "_id": "6725e50cc784d468558853b1",
+                        "name": "activity name updated",
+                        "attendanceCount": 0,
+                        "attendees": []
+                    }
+                ],
+                "activityCount": 1,
+                "attendanceCount": 0
+            }
+        ]
         }
         ```
+    ````
 
-    <img src="https://i.ibb.co.com/x803hXH/Screenshot-2024-11-02-200221.png" alt="database er diagram">
+#### Database ER Diagram
+
+    ![ER Diagram](https://i.ibb.co.com/x803hXH/Screenshot-2024-11-02-200221.png)

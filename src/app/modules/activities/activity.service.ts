@@ -352,7 +352,7 @@ async function getReportFromDb() {
         };
 
         return {
-            statusCode: StatusCodes.NOT_FOUND,
+            statusCode: StatusCodes.OK,
             success: true,
             message: "User activity report generated successfully",
             data: usersReport
