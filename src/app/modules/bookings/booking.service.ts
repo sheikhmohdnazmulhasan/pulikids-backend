@@ -2,6 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import { IBooking } from "./booking.interface";
 import Booking from "./booking.model";
 import { JwtPayload } from "jsonwebtoken";
+import { userRole } from "../../constants/constant.user.role";
 
 async function createBookingIntoDb(user: JwtPayload, newBooking: Partial<IBooking>) {
     try {
@@ -71,9 +72,9 @@ async function createBookingIntoDb(user: JwtPayload, newBooking: Partial<IBookin
 };
 
 // Retrieve bookings with related activity and user details
-async function retrieveAllBookingsFromDb() {
+async function retrieveAllBookingsFromDb(user: JwtPayload) {
     try {
-        const result = await Booking.find().populate({
+        const result = await Booking.find(user.role === userRole.USER ? { userId: user._id } : {}).populate({
             path: 'activityId',
             select: 'name description location',
         }).populate({
@@ -111,7 +112,7 @@ async function retrieveAllBookingsFromDb() {
 };
 
 // Retrieve single booking by _id with related activity and user details
-async function retrieveSingleFromDb(bookingId: string) {
+async function retrieveSingleBookingFromDb(bookingId: string) {
     try {
         const result = await Booking.findById(bookingId).populate({
             path: 'activityId',
@@ -150,8 +151,49 @@ async function retrieveSingleFromDb(bookingId: string) {
     }
 };
 
+// Retrieve specific users booking by _id with related activity and user details
+async function retrieveUserBookingsFromDb(userId: string) {
+    try {
+        const result = await Booking.find({ userId }).populate({
+            path: 'activityId',
+            select: 'name description location',
+        }).populate({
+            path: 'userId',
+            select: 'firstName lastName email'
+        });
+
+        // Check if any bookings were found
+        if (!result) {
+            return {
+                statusCode: StatusCodes.NOT_FOUND,
+                success: false,
+                message: "Booking Not Available",
+                data: null,
+            };
+        }
+
+        // Return successful response with booking data
+        return {
+            statusCode: StatusCodes.OK,
+            success: true,
+            message: "User bookings retrieved successfully",
+            data: result,
+        };
+
+    } catch (error) {
+        // Handle errors
+        return {
+            statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+            success: false,
+            message: "Something went wrong. Please try again later.",
+            data: null,
+        };
+    }
+};
+
 export const BookingService = {
     createBookingIntoDb,
     retrieveAllBookingsFromDb,
-    retrieveSingleFromDb
+    retrieveSingleBookingFromDb,
+    retrieveUserBookingsFromDb
 }

@@ -13,7 +13,7 @@ router.post('/create-booking',
     BookingController.createBooking);
 
 router.get('/',
-    Auth([userRole.ADMIN]),
+    Auth([userRole.ADMIN, userRole.USER]),
     // ValidationRequest(BookingValidation.createBookingSchemaValidation),
     BookingController.retrieveAllBookings);
 
@@ -21,5 +21,10 @@ router.get('/:bookingId',
     Auth([userRole.ADMIN]),
     // ValidationRequest(BookingValidation.createBookingSchemaValidation),
     BookingController.retrieveSingleBooking);
+
+router.get('/user/:userId',
+    Auth([userRole.ADMIN]),
+    // ValidationRequest(BookingValidation.createBookingSchemaValidation),
+    BookingController.retrieveUserBookings);
 
 export const BookingRoutes = router;

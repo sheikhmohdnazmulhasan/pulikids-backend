@@ -15,7 +15,7 @@ const createBooking = catchAsync(async (req: Request, res: Response) => {
 });
 
 const retrieveAllBookings = catchAsync(async (req: Request, res: Response) => {
-    const result = await BookingService.retrieveAllBookingsFromDb();
+    const result = await BookingService.retrieveAllBookingsFromDb(req.user);
 
     sendResponse(res, {
         statusCode: result.statusCode,
@@ -26,7 +26,18 @@ const retrieveAllBookings = catchAsync(async (req: Request, res: Response) => {
 });
 
 const retrieveSingleBooking = catchAsync(async (req: Request, res: Response) => {
-    const result = await BookingService.retrieveSingleFromDb(req.params.bookingId);
+    const result = await BookingService.retrieveSingleBookingFromDb(req.params.bookingId);
+
+    sendResponse(res, {
+        statusCode: result.statusCode,
+        success: result.success,
+        message: result.message,
+        data: result.data,
+    });
+});
+
+const retrieveUserBookings = catchAsync(async (req: Request, res: Response) => {
+    const result = await BookingService.retrieveUserBookingsFromDb(req.params.userId);
 
     sendResponse(res, {
         statusCode: result.statusCode,
@@ -39,5 +50,6 @@ const retrieveSingleBooking = catchAsync(async (req: Request, res: Response) => 
 export const BookingController = {
     createBooking,
     retrieveAllBookings,
-    retrieveSingleBooking
+    retrieveSingleBooking,
+    retrieveUserBookings
 }
