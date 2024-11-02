@@ -246,6 +246,57 @@ async function updateBookingStatusIntoDb(bookingId: string, payload: { status: '
             data: null,
         };
     }
+};
+
+async function deleteBookingFromDb(bookingId: string) {
+    try {
+
+        // Fetch the booking by its ID
+        const booking = await Booking.findById(bookingId).lean();
+
+        // Check if the booking exists
+        if (!booking) {
+            return {
+                statusCode: StatusCodes.NOT_FOUND, // 404 error if booking not found
+                success: false,
+                message: "Booking not found. Please check the booking ID and try again.",
+                data: null,
+            };
+        };
+
+        // Attempt to delete the booking
+        const result = await Booking.findByIdAndDelete(bookingId);
+
+        // Check if the deletion was successful
+        if (!result) {
+            return {
+                statusCode: StatusCodes.INTERNAL_SERVER_ERROR, // 500 if deletion fails unexpectedly
+                success: false,
+                message: "Failed to delete the booking due to an internal error. Please try again later.",
+                data: null,
+            };
+        }
+
+        // Return success response
+        return {
+            statusCode: StatusCodes.OK, // 200 success status
+            success: true,
+            message: "Booking deleted successfully.",
+            data: null,
+        };
+
+    } catch (error) {
+        // Log the error for debugging (optional, depending on your logging strategy)
+        // console.error("Error deleting booking:", error);
+
+        // Handle unexpected errors gracefully
+        return {
+            statusCode: StatusCodes.INTERNAL_SERVER_ERROR, // 500 error for server issues
+            success: false,
+            message: "An unexpected error occurred while attempting to delete the booking. Please try again later.",
+            data: null,
+        };
+    }
 }
 
 
@@ -254,5 +305,6 @@ export const BookingService = {
     retrieveAllBookingsFromDb,
     retrieveSingleBookingFromDb,
     retrieveUserBookingsFromDb,
-    updateBookingStatusIntoDb
+    updateBookingStatusIntoDb,
+    deleteBookingFromDb
 }

@@ -14,22 +14,23 @@ router.post('/create-booking',
 
 router.get('/',
     Auth([userRole.ADMIN, userRole.USER]),
-    // ValidationRequest(BookingValidation.createBookingSchemaValidation),
     BookingController.retrieveAllBookings);
 
 router.get('/:bookingId',
     Auth([userRole.ADMIN]),
-    // ValidationRequest(BookingValidation.createBookingSchemaValidation),
     BookingController.retrieveSingleBooking);
 
 router.get('/user/:userId',
     Auth([userRole.ADMIN]),
-    // ValidationRequest(BookingValidation.createBookingSchemaValidation),
     BookingController.retrieveUserBookings);
 
 router.patch('/action/status/:bookingId',
     Auth([userRole.ADMIN]),
     ValidationRequest(BookingValidation.updateBookingSchemaValidation),
     BookingController.updateBookingStatus);
+
+router.delete('/action/delete/:bookingId',
+    Auth([userRole.ADMIN]),
+    BookingController.deleteBooking);
 
 export const BookingRoutes = router;
