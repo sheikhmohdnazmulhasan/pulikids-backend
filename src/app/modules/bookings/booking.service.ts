@@ -71,7 +71,6 @@ async function createBookingIntoDb(user: JwtPayload, newBooking: Partial<IBookin
 };
 
 // Retrieve bookings with related activity and user details
-
 async function retrieveAllBookingsFromDb() {
     try {
         const result = await Booking.find().populate({
@@ -109,9 +108,50 @@ async function retrieveAllBookingsFromDb() {
             data: null,
         };
     }
-}
+};
+
+// Retrieve single booking by _id with related activity and user details
+async function retrieveSingleFromDb(bookingId: string) {
+    try {
+        const result = await Booking.findById(bookingId).populate({
+            path: 'activityId',
+            select: 'name description location',
+        }).populate({
+            path: 'userId',
+            select: 'firstName lastName email'
+        });
+
+        // Check if any bookings were found
+        if (!result) {
+            return {
+                statusCode: StatusCodes.NOT_FOUND,
+                success: false,
+                message: "Booking Not Available",
+                data: null,
+            };
+        }
+
+        // Return successful response with booking data
+        return {
+            statusCode: StatusCodes.OK,
+            success: true,
+            message: "Booking retrieved successfully",
+            data: result,
+        };
+
+    } catch (error) {
+        // Handle errors
+        return {
+            statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+            success: false,
+            message: "Something went wrong. Please try again later.",
+            data: null,
+        };
+    }
+};
 
 export const BookingService = {
     createBookingIntoDb,
-    retrieveAllBookingsFromDb
+    retrieveAllBookingsFromDb,
+    retrieveSingleFromDb
 }
