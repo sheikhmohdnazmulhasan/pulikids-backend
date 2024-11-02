@@ -1,0 +1,684 @@
+{
+	"info": {
+		"_postman_id": "3f8b1a22-5b6c-4ea6-855d-953924b295ea",
+		"name": "Pulikids",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30930028"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "create-user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"firstName\": \"Nazmul\",\r\n  \"lastName\": \"Hasan\",\r\n  \"email\": \"nazmulofficial@outlook.com\",\r\n  \"password\": \"Nazmul@#123421x\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/v1/auth/user/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"user",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"nazmulofficial@outlook.scom\",\r\n    \"password\": \"Nazmul@#123421x\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/v1/auth/user/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "password-reset-request",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"x.nazmulofficial@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/v1/auth/user/password-reset-request",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"user",
+								"password-reset-request"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reset-password",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"token\": \"28733d3f6f65aa83c157b1e8b9c76c77a99d4035a90898e21827c403b110e799\",\r\n    \"newPassword\": \"nAz,ul332324&&\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/v1/auth/user/reset-password",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"user",
+								"reset-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "change-password",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"x.nazmulofficial@gmail.com\",\r\n    \"oldPassword\" : \"nAz,ul332324&&\",\r\n    \"newPassword\": \"nAz,ul332324&&zzz\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/v1/auth/user/change-password",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"user",
+								"change-password"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "activities",
+			"item": [
+				{
+					"name": "create-activity",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7Il9pZCI6IjY3MjVlNGE2Yzc4NGQ0Njg1NTg4NTNhZSIsImVtYWlsIjoidXNlckBleGFtcGxlLmNvbSIsInJvbGUiOiJ1c2VyIn0sImlhdCI6MTczMDUzNjYzMiwiZXhwIjoxNzMxMTQxNDMyfQ.na3aZ0jhL-ReLDZn0NuHlUpdrXPBPOhlsrALn_p4hlc",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Team Building Workshop\",\r\n  \"description\": \"A workshop aimed at improving team dynamics and communication.\",\r\n  \"date\": \"2024-11-10\",\r\n  \"startTime\": \"09:00\",\r\n  \"endTime\": \"17:00\",\r\n  \"location\": \"Room 402, Main Office Building\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/v1/activities/create-activity",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"activities",
+								"create-activity"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-all-activity",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/v1/activities",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"activities"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-single-activity",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/v1/activities/6725e50cc784d468558853b1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"activities",
+								"6725e50cc784d468558853b1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update-activity",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7Il9pZCI6IjY3MjVlNGE2Yzc4NGQ0Njg1NTg4NTNhZSIsImVtYWlsIjoidXNlckBleGFtcGxlLmNvbSIsInJvbGUiOiJ1c2VyIn0sImlhdCI6MTczMDUzNjYzMiwiZXhwIjoxNzMxMTQxNDMyfQ.na3aZ0jhL-ReLDZn0NuHlUpdrXPBPOhlsrALn_p4hlc",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"Team Building Workshop updated\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/v1/activities/6725e50cc784d468558853b1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"activities",
+								"6725e50cc784d468558853b1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete-activity",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7Il9pZCI6IjY3MjM4NjQyZmFmZmE3MDZiM2UyOWNlNiIsImVtYWlsIjoieC5uYXptdWxvZmZpY2lhbEBnbWFpbC5jb20iLCJyb2xlIjoidXNlciJ9LCJpYXQiOjE3MzA0NTg5MDEsImV4cCI6MTczMTA2MzcwMX0.u2tabq5VrMXrj3FL44_Xhw_BCQb8NEyJFjWh28frAt4",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5000/api/v1/activities/6725e50cc784d468558853b1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"activities",
+								"6725e50cc784d468558853b1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get report",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7Il9pZCI6IjY3MjM4NjQyZmFmZmE3MDZiM2UyOWNlNiIsImVtYWlsIjoieC5uYXptdWxvZmZpY2lhbEBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4ifSwiaWF0IjoxNzMwNDY5ODA0LCJleHAiOjE3MzEwNzQ2MDR9.hbYEAxqNmnle7QvA7_r6HlRS1ZvuCn8I-RUIGNNe9nE",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5000/api/v1/activities/report",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"activities",
+								"report"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "attendance",
+			"item": [
+				{
+					"name": "create-attendance",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7Il9pZCI6IjY3MjM4NjQyZmFmZmE3MDZiM2UyOWNlNiIsImVtYWlsIjoieC5uYXptdWxvZmZpY2lhbEBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4ifSwiaWF0IjoxNzMwNDY5ODA0LCJleHAiOjE3MzEwNzQ2MDR9.hbYEAxqNmnle7QvA7_r6HlRS1ZvuCn8I-RUIGNNe9nE",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "// If the role is `admin` and `userId` is provided, it uses that; otherwise, it defaults to the user's own ID (`user._id`) from token. \r\n{\r\n    \"activityId\" : \"672479d291afe5b7db4fb3c9\",\r\n    // \"userId\" : \"67235c65631af1250856e81a\",\r\n    \"status\" : \"present\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/v1/attendances/create-attendance",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"attendances",
+								"create-attendance"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-all-attendances",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7Il9pZCI6IjY3MjM4NjQyZmFmZmE3MDZiM2UyOWNlNiIsImVtYWlsIjoieC5uYXptdWxvZmZpY2lhbEBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4ifSwiaWF0IjoxNzMwNDY5ODA0LCJleHAiOjE3MzEwNzQ2MDR9.hbYEAxqNmnle7QvA7_r6HlRS1ZvuCn8I-RUIGNNe9nE",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5000/api/v1/attendances/?",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"attendances",
+								""
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-activity-based-attendances",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7Il9pZCI6IjY3MjM4NjQyZmFmZmE3MDZiM2UyOWNlNiIsImVtYWlsIjoieC5uYXptdWxvZmZpY2lhbEBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4ifSwiaWF0IjoxNzMwNDY5ODA0LCJleHAiOjE3MzEwNzQ2MDR9.hbYEAxqNmnle7QvA7_r6HlRS1ZvuCn8I-RUIGNNe9nE",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5000/api/v1/attendances/6725e50cc784d468558853b1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"attendances",
+								"6725e50cc784d468558853b1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "bookings",
+			"item": [
+				{
+					"name": "create-new-booking",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7Il9pZCI6IjY3MjVlNGE2Yzc4NGQ0Njg1NTg4NTNhZSIsImVtYWlsIjoidXNlckBleGFtcGxlLmNvbSIsInJvbGUiOiJ1c2VyIn0sImlhdCI6MTczMDUzNjYzMiwiZXhwIjoxNzMxMTQxNDMyfQ.na3aZ0jhL-ReLDZn0NuHlUpdrXPBPOhlsrALn_p4hlc",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"activityId\" : \"6725e50cc784d468558853b1\",\r\n    \"bookingDate\" : \"2024-11-10\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/v1/bookings/create-booking",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"bookings",
+								"create-booking"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-all-booking",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7Il9pZCI6IjY3MjUxNGNlZDFlYzc2MjkyYzJhNWFkYyIsImVtYWlsIjoibmF6bXVsb2ZmaWNpYWxAb3V0bG9vay5zY29tIiwicm9sZSI6ImFkbWluIn0sImlhdCI6MTczMDUyMzEzMSwiZXhwIjoxNzMxMTI3OTMxfQ.3nXZBpQzWFCs8vMo519wAVciDcrbWhOMRANim3O19aA",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5000/api/v1/bookings/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"bookings",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-single-booking",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7Il9pZCI6IjY3MjUxNGNlZDFlYzc2MjkyYzJhNWFkYyIsImVtYWlsIjoibmF6bXVsb2ZmaWNpYWxAb3V0bG9vay5zY29tIiwicm9sZSI6ImFkbWluIn0sImlhdCI6MTczMDUyMzEzMSwiZXhwIjoxNzMxMTI3OTMxfQ.3nXZBpQzWFCs8vMo519wAVciDcrbWhOMRANim3O19aA",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5000/api/v1/bookings/6725e6abc784d468558853c8",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"bookings",
+								"6725e6abc784d468558853c8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-user-spesific-bookings",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7Il9pZCI6IjY3MjUxNGNlZDFlYzc2MjkyYzJhNWFkYyIsImVtYWlsIjoibmF6bXVsb2ZmaWNpYWxAb3V0bG9vay5zY29tIiwicm9sZSI6ImFkbWluIn0sImlhdCI6MTczMDUyMzEzMSwiZXhwIjoxNzMxMTI3OTMxfQ.3nXZBpQzWFCs8vMo519wAVciDcrbWhOMRANim3O19aA",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5000/api/v1/bookings/user/6725e4a6c784d468558853ae",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"bookings",
+								"user",
+								"6725e4a6c784d468558853ae"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update-booking-status",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7Il9pZCI6IjY3MjUxNGNlZDFlYzc2MjkyYzJhNWFkYyIsImVtYWlsIjoibmF6bXVsb2ZmaWNpYWxAb3V0bG9vay5zY29tIiwicm9sZSI6ImFkbWluIn0sImlhdCI6MTczMDUyMzEzMSwiZXhwIjoxNzMxMTI3OTMxfQ.3nXZBpQzWFCs8vMo519wAVciDcrbWhOMRANim3O19aA",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\" : \"confirmed\" // 'confirmed' | 'canceled'\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/v1/bookings/action/status/6725e4a6c784d468558853ae",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"bookings",
+								"action",
+								"status",
+								"6725e4a6c784d468558853ae"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete-booking",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7Il9pZCI6IjY3MjUxNGNlZDFlYzc2MjkyYzJhNWFkYyIsImVtYWlsIjoibmF6bXVsb2ZmaWNpYWxAb3V0bG9vay5zY29tIiwicm9sZSI6ImFkbWluIn0sImlhdCI6MTczMDUyMzEzMSwiZXhwIjoxNzMxMTI3OTMxfQ.3nXZBpQzWFCs8vMo519wAVciDcrbWhOMRANim3O19aA",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\" : \"confirmed\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/v1/bookings/action/delete/6725e4a6c784d468558853ae",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"bookings",
+								"action",
+								"delete",
+								"6725e4a6c784d468558853ae"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
